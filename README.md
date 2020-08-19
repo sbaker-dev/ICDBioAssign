@@ -5,7 +5,7 @@ time to construct a phenotype. This code just produce these phenotypes for you f
 
 ## Instructions
 
-### Create you definitions
+### Create your definitions
 
 You will need to create a set of definitions for your phenotypes and write these into a csv file. The format is fairly
 simple, you need the name of your phenotype, the ICD9 codes and then your ICD10 codes. ICD9 formats are slightly 
@@ -16,8 +16,8 @@ different than ICD10 so you need to follow at present of these three rules.
 * If there is only 1 number in the first column, then it is set as the only code
 * If there is more than 1 entry in the first column, then each number is returned as a list.
 
-ICD 10 on the other hand is simpler, If you want all the definitions with I1 and I2, then you can just put those two
-in the same row but in separate columns. An example file is available within Templates, that looks like the following to
+ICD 10 on the other hand is simpler, if you want all of the codes within I you can just use I, if you want all the codes
+that are in I4 you can just use I4 etc. An example file is available within Templates, that looks like the following to
 give you an example of what you need to submit. 
 
 |Definition|ICD9Min  |ICD9Max|Codes|Codes|Codes|Codes|Codes|Codes|
