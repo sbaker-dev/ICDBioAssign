@@ -48,22 +48,32 @@ columns contain the data ICD codes for 9 or 10. If you want to use columns conta
 Primary 41202, then assign "41202" as a string to column indexes. If you want to use only specific columns, pass a list 
 of the indexes of this columns to column indexes. 
 
-So for example, in this case i have isolated only ICD9 codes into a file, but only want to extract the primary sample. 
-The biobank ID for ICD9 primary sample is 40203, so this is passed to column indexes, icd10 is set to false and the 
-relevant paths are set. This will construct you a file, with columns equal to the number of phenotypes you specified. So
-if using the example definitions file in the template you will get 9 outcomes.  
+You can isolate from multiple files, before compiling out which may be useful if you are working with data split in
+ICD9 and ICD10. If you do have ICD9 codes, then you need to specify that ICD10=False, as ICD9 codes function
+differently.
+
+When you want to output your file, call the compile_and_write method. You can use one of the two definitions of 
+"Maximum" or "Constant" when combining multiple files, both are case sensitive and the program defaults to Maximum.
+Maximum, will set an individual to be equal to 1 if any of outcomes in any of the dataset's you isolated is 1. Constant
+on the other hand requires all rows in all dataset's to be equal to 1 for the outcome to also be equal to 1. 
+
 
 ```python
 from ICDBioAssign.core import ICDBioAssign
 
-# ICD 9 Primary
-icd9_path_file_path = "pathHere"
+icd9_path = "pathHere"
+icd10_path = "pathHere"
+cod_path = "pathHere"
 definition_path = "pathHere"
 write_directory = "pathHere"
 
-ICDBioAssign(
-    definition_path, icd9_path_file_path, icd10=False, column_indexes="41203"
-).set_definitions(write_directory, "File_name") 
+icd = ICDBioAssign(definition_path, write_directory, "CVD_Outcomes")
+
+icd.set_definitions(icd10_path, column_indexes="40202")
+icd.set_definitions(icd9_path, icd_10=False)
+icd.set_definitions(cod_path)
+icd.compile_and_write()
+
 ```
 
 That's it! You should now have everything you need to construct your phenotype definitions from ICD data. 
