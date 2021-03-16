@@ -57,10 +57,12 @@ class ICDBioAssign:
 
             # Assign each individual a 1 or 0 for each phenotype based on the codes in the lookup
             if icd_10:
-                assigned_values = [self._assign_definition(self._extract_codes(row, index_min, index_max), code_list)
+                assigned_values = [self._assign_definition(self._extract_codes(row, index_min, index_max), code_list,
+                                                           icd_10)
                                    for code_list in self._icd_10_lookup.values()]
             else:
-                assigned_values = [self._assign_definition(self._extract_codes(row, index_min, index_max), code_list)
+                assigned_values = [self._assign_definition(self._extract_codes(row, index_min, index_max), code_list,
+                                                           icd_10)
                                    for code_list in self._icd_9_lookup.values()]
 
             # write this id's assigned_value and update the list of ids
@@ -115,24 +117,29 @@ class ICDBioAssign:
         """
         return [row for row in raw_row[index_min: index_max] if row != "nan"]
 
-    def _assign_definition(self, row, code_list):
+    def _assign_definition(self, row, code_list, icd_type):
         """
         For the current definitions code list, check to see if any of the row's ICD codes match a code in our code list.
         If so, return 1. If no codes are set then return 0.
         """
         for code in code_list:
-            if self._check_icd(row, code):
+            if self._check_icd(row, code, icd_type):
                 return 1
         return 0
 
     @staticmethod
-    def _check_icd(row, code):
+    def _check_icd(row, code, icd_type):
         """
         For the current code in current row, return True if the code is within one of the ICD codes assign to this
         individual
         """
         for icd in row:
-            if code in icd:
+            # ICD 10 can have nesting
+            if icd_type and (code in icd):
+                return True
+
+            # ICD 9 cannot
+            elif not icd_type and code == icd:
                 return True
 
     @staticmethod
